@@ -1,0 +1,38 @@
+#board{
+    position: absolute;
+    z-index: 1;
+}
+.space{
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+
+}
+#table{
+    background: orange;
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin: 10px;
+}
+.star{
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    position: absolute;
+    background: black;
+    z-index: 2;
+}
+.chess{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    position: absolute;
+    background: rgb(50,42,181);
+    background: radial-gradient(circle, rgba(50,42,181,1) 0%, rgba(0,0,0,1) 35%, rgba(0,209,251,1) 100%);
+    z-index: 3;
+}
+button{
+    position: absolute;
+    left: 600px;
+    z-index: 3;
+}

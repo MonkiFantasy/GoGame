@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GoGame</title>
+    <link rel="stylesheet" href="css/board.css">
+</head>
+<body>
+<!--绘制棋盘-->
+<div id="board">
+    <table id="table" cellpadding="0">
+        <!-- 19x19 board -->
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+        <tr>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+            <td><div class="space"></div></td>
+        </tr>
+    </table>
+</div>
+<!--绘制星位-->
+<div class="star" style="left: 111px;top:111px"></div>
+<div class="star" style="left:300.5px;top:111px"></div>
+<div class="star" style="left: 111px;top:300.5px"></div>
+<div class="star" style="left:300.5px;top:300.5px"></div>
+<div class="star" style="left:490px;top:111px"></div>
+<div class="star" style="left: 111px;top:490px"></div>
+<div class="star" style="left:300.5px;top:490px"></div>
+<div class="star" style="left: 490px;top:300.5px"></div>
+<div class="star" style="left: 490px;top:490px"></div>
+<!--绘制棋子-->
+<!--<div class="chess" ></div>-->
+<form action="post">
+    <!--<p>
+        <span>用户名：</span><input type="text" id ="username">
+    </p>-->
+
+        <!--<span>性别：</span>
+        <input type="radio" name="sex" value="man" id="boy">男
+        <input type="radio" name="sex" value="woman" id="girl">女-->
+        <button type="button" id="btn">技能：势如破竹</button>
+
+
+</form>
+
+<script src="test.js">
+
+</script>
+</body>
+</html>
