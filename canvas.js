@@ -1,8 +1,3 @@
-let board=document.getElementById("board");
-let context=board.getContext("2d");//棋盘context对象
-let blackPlayer=true;
-let fallPosition=[[]];//坐标的落子状态
-let isFloat =[[]];//鼠标是否悬浮在坐标上
 const charArr=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S"];//用于棋盘坐标绘制
 const BOARD_SIZE=800;//棋盘大小
 const BORDER_SIZE=700;//棋盘边框大小
@@ -10,8 +5,20 @@ const WHITE=0;//白棋
 const BLACK=1;//黑棋
 const EMPTY=2;//空棋
 
+let board=document.getElementById("board");
+let context=board.getContext("2d");//棋盘context对象
+let blackPlayer=true;
+let fallPosition=[[]];//坐标的落子状态
+let isFloat =[[]];//鼠标是否悬浮在坐标上
+let canvasHistory =[];
+let radius = BORDER_SIZE / 36 ;
+let data;
+
+
+
 board.width=BOARD_SIZE;
 board.height=BOARD_SIZE;
+
 
 
 
@@ -54,8 +61,9 @@ let drawBoard=function(){
         context.arc(-BORDER_SIZE/2+starArr[i][0]*BORDER_SIZE/18,-BORDER_SIZE/2+starArr[i][1]*BORDER_SIZE/18,5,0,2*Math.PI);
         context.fill();
     }
-    context.save();
+
     context.translate(-BOARD_SIZE/2,-BOARD_SIZE/2);
+    data = getRawData();
 }
 
 //获得棋子坐标
@@ -119,30 +127,53 @@ let drawChess=function (x,y,color) {
     context.fill();
 
 }
+//获取棋子交叉点原画
+let getRawData=function (){
+    let data = [[]];
 
+    for(let i=0;i<19;i++){
+        data[i]=[];
+
+        for(let j=0;j<19;j++) {
+            data[i][j] = context.getImageData(positions[i][j].x - radius,positions[i][j].y - radius, radius * 2,radius * 2);
+        }
+    }
+    return data;
+};
+
+//清除掉棋子
+let clearChess = function (i,j){
+
+    context.clearRect(positions[i][j].x - radius, positions[i][j].y - radius, radius * 2, radius * 2);
+    context.putImageData(data[i][j],positions[i][j].x - radius,positions[i][j].y - radius);
+}
+let positions=getPositions();
+let range = getRange();
 //移动鼠标事件监听
 board.onmousemove=function(event){
-    let inBorder = event.clientX>(BOARD_SIZE-BORDER_SIZE)/2&&event.clientX<(BOARD_SIZE+BORDER_SIZE)/2&&event.clientY>(BOARD_SIZE-BORDER_SIZE)/2&&event.clientY<(BOARD_SIZE+BORDER_SIZE)/2;
 
+    let inBorder = event.clientX>(BOARD_SIZE-BORDER_SIZE)/2&&event.clientX<(BOARD_SIZE+BORDER_SIZE)/2&&event.clientY>(BOARD_SIZE-BORDER_SIZE)/2&&event.clientY<(BOARD_SIZE+BORDER_SIZE)/2;
     for(let i=0;i<range.length;i++){
         for(let j=0;j<range[i].length;j++){
             let inPosition=event.clientX>range[i][j].xStart&&event.clientX<range[i][j].xEnd&&event.clientY>range[i][j].yStart&&event.clientY<range[i][j].yEnd;
+
             if(inPosition){
                 if(blackPlayer) {
                     if (fallPosition[i][j] == EMPTY){
+
                         drawChess(positions[i][j].x, positions[i][j].y, BLACK);
                         isFloat[i][j]=true;
                     }
                 }else {
                     if (fallPosition[i][j] == EMPTY){
+
                         drawChess(positions[i][j].x, positions[i][j].y, WHITE);
                         isFloat[i][j]=true;
                     }
 
                 }
             }else if (!inPosition&&inBorder&&isFloat[i][j]==true&&fallPosition[i][j]!=WHITE&&fallPosition[i][j]!=BLACK) {
-                let radius = BORDER_SIZE / 36 - 2;
-                context.clearRect(positions[i][j].x - radius-1, positions[i][j].y - radius-1, radius * 2+2, radius * 2+2);
+                clearChess(i,j);
 
             }
         }
@@ -163,12 +194,14 @@ board.onclick=function(event){
                         drawChess(positions[i][j].x, positions[i][j].y, BLACK);
                         fallPosition[i][j]=BLACK;
                         blackPlayer = !blackPlayer;
+
                     }
                 }else {
                     if (fallPosition[i][j] == EMPTY){
                         drawChess(positions[i][j].x, positions[i][j].y, WHITE);
                         fallPosition[i][j]=WHITE;
                         blackPlayer = !blackPlayer;
+
                     }
                 }
             }
@@ -190,8 +223,7 @@ let initFallPosition=function() {
 }
 drawBoard();
 initFallPosition();
-let positions=getPositions();
-let range = getRange();
+
 /*console.log(positions);
 console.log(range);
 console.log(positions[0][0].x,positions[0][0].y);
