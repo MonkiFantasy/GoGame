@@ -1,14 +1,15 @@
 let board=document.getElementById("board");
 let context=board.getContext("2d");//棋盘context对象
 let blackPlayer=true;
-let fallPosition=[[]];//已落子的坐标
+let fallPosition=[[]];//坐标的落子状态
+let isFloat =[[]];//鼠标是否悬浮在坐标上
 const charArr=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S"];//用于棋盘坐标绘制
 const BOARD_SIZE=800;//棋盘大小
 const BORDER_SIZE=700;//棋盘边框大小
 const WHITE=0;//白棋
 const BLACK=1;//黑棋
 const EMPTY=2;//空棋
-const HOVER=3;//悬停棋
+
 board.width=BOARD_SIZE;
 board.height=BOARD_SIZE;
 
@@ -130,15 +131,16 @@ board.onmousemove=function(event){
                 if(blackPlayer) {
                     if (fallPosition[i][j] == EMPTY){
                         drawChess(positions[i][j].x, positions[i][j].y, BLACK);
-                        fallPosition[i][j]=3;
+                        isFloat[i][j]=true;
                     }
                 }else {
                     if (fallPosition[i][j] == EMPTY){
-                    drawChess(positions[i][j].x, positions[i][j].y, WHITE);fallPosition[i][j]=3;
+                        drawChess(positions[i][j].x, positions[i][j].y, WHITE);
+                        isFloat[i][j]=true;
                     }
 
                 }
-            }else if (!inPosition&&inBorder&&fallPosition[i][j]==3) {
+            }else if (!inPosition&&inBorder&&isFloat[i][j]==true&&fallPosition[i][j]!=WHITE&&fallPosition[i][j]!=BLACK) {
                 let radius = BORDER_SIZE / 36 - 2;
                 context.clearRect(positions[i][j].x - radius-1, positions[i][j].y - radius-1, radius * 2+2, radius * 2+2);
 
@@ -157,18 +159,17 @@ board.onclick=function(event){
             if(event.clientX>range[i][j].xStart&&event.clientX<range[i][j].xEnd&&event.clientY>range[i][j].yStart&&event.clientY<range[i][j].yEnd){
 
                 if(blackPlayer) {
-
-                    if (fallPosition[i][j] == 3) {
+                    if (fallPosition[i][j] == EMPTY) {
                         drawChess(positions[i][j].x, positions[i][j].y, BLACK);
-                    fallPosition[i][j]=BLACK;
-                    blackPlayer = !blackPlayer;}
+                        fallPosition[i][j]=BLACK;
+                        blackPlayer = !blackPlayer;
+                    }
                 }else {
-
-                    if (fallPosition[i][j] == 3){
-
+                    if (fallPosition[i][j] == EMPTY){
                         drawChess(positions[i][j].x, positions[i][j].y, WHITE);
-                    fallPosition[i][j]=WHITE;
-                    blackPlayer = !blackPlayer;}
+                        fallPosition[i][j]=WHITE;
+                        blackPlayer = !blackPlayer;
+                    }
                 }
             }
         }
@@ -180,8 +181,10 @@ board.onclick=function(event){
 let initFallPosition=function() {
     for (let i = 0; i < 19; i++) {
         fallPosition[i] = [];
+        isFloat[i]=[];
         for (let j = 0; j < 19; j++) {
-            fallPosition[i][j] = "EMPTY";
+            fallPosition[i][j] = EMPTY;
+            isFloat[i][j]=false;
         }
     }
 }
