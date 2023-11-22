@@ -367,13 +367,14 @@ let checkAir = function(){
 }
 
 //判死子
-let checkDeath= function(){
+let checkDeath= function(color){
+    let opColor = (color==WHITE)?BLACK:WHITE;
     for (let i=0;i<19;i++){
         for (let j=0;j<19;j++){
-            if(fallPosition[i][j]!=EMPTY&&air[i][j].length==0){
+            if(fallPosition[i][j]==opColor&&air[i][j].length==0){
                 clearChess(i,j);
                 fallPosition[i][j]=EMPTY;
-                air[i][j]=[];//本来就是没气才死，这里没必要
+                //air[i][j]=[];//本来就是没气才死，这里没必要
             }
         }
     }
@@ -599,7 +600,7 @@ board.onclick=function(event){
                         /*checkDeath(BLACK);*/
                         checkAir();
                         connectChess();
-                        checkDeath();
+                        checkDeath(BLACK);
                         blackPlayer = !blackPlayer;
 
                     }
@@ -610,7 +611,7 @@ board.onclick=function(event){
                         /*checkDeath(WHITE);*/
                         checkAir();
                         connectChess();
-                        checkDeath();
+                        checkDeath(WHITE);
                         blackPlayer = !blackPlayer;
 
                     }
