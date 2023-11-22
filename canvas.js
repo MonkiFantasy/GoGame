@@ -10,6 +10,7 @@ let context=board.getContext("2d");//棋盘context对象
 let blackPlayer=true;
 let fallPosition=[[]];//坐标的落子状态
 let isFloat =[[]];//鼠标是否悬浮在坐标上
+let air = [[]];
 let canvasHistory =[];
 let radius = BORDER_SIZE / 36 ;
 let data;
@@ -19,8 +20,364 @@ let data;
 board.width=BOARD_SIZE;
 board.height=BOARD_SIZE;
 
+//检测棋子的气，存入数组air
+/*let checkAir = function(){
+    let fp=fallPosition;
+    for(let i=0;i<19;i++){
+        air[i]=[];
+        for (let j = 0;j<19;j++){
+            air[i][j]=[];
+            if(fallPosition[i][j]!=EMPTY) {//如果有棋子，才判断气
 
 
+                //先判断角
+                if (i == 0 && j == 0) {
+                    let d = fp[i + 1][j];
+                    let r = fp[i][j + 1];
+                    if(d==EMPTY){
+                        air[i][j].push('(' + (i + 1) + ',' + j + ')');
+                    }
+                    if(r==EMPTY){
+                        air[i][j].push('(' + i + ',' + (j+1) + ')');
+                    }
+                } else if (i == 0 && j == 18) {
+
+                } else if (i == 18 && j == 0) {
+
+                } else if (i == 18 && j == 18) {
+
+                } else {
+                    //再判断边
+                    if (i == 0) {
+
+                    } else if (j == 0) {
+
+                    } else if (i == 18) {
+
+                    } else if (j == 18) {
+
+                    } else {
+                        //再判断中腹
+                        let u = fp[i - 1][j];
+                        let d = fp[i + 1][j];
+                        let l = fp[i][j - 1];
+                        let r = fp[i][j + 1];
+                        if (u == EMPTY) {
+                            air[i][j].push('(' + (i - 1) + ',' + j + ')');
+                        }
+                        if(d==EMPTY){
+                            air[i][j].push('(' + (i + 1) + ',' + j + ')');
+                        }
+                        if(l==EMPTY){
+                            air[i][j].push('(' + (i) + ',' + (j-1) + ')');
+                        }
+                        if(r==EMPTY){
+                            air[i][j].push('(' + i + ',' + (j+1) + ')');
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+    console.log(air);
+}*/
+//同色棋子连接之后更新气
+let connectChess = function(){
+    let fp = fallPosition;
+
+    // 定义一个辅助函数用于合并气数组并去重
+    const mergeAndRemoveDuplicates = (air1, air2) => {
+        let mergedAir = [...air1, ...air2];
+        return Array.from(new Set(mergedAir));
+    };
+
+    for (let i = 0; i < 19; i++) {
+        for (let j = 0; j < 19; j++) {
+            if (fallPosition[i][j] !== EMPTY) { // 如果有棋子，才进行连接操作
+                let currentChessAir = air[i][j];
+
+                // 连接角
+                if (i === 0 && j === 0) {
+                    let d = fp[i + 1][j];
+                    let r = fp[i][j + 1];
+                    if (d === fallPosition[i][j]) {
+                        air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i + 1][j]);
+                        air[i + 1][j] = air[i][j]; // 更新相连的棋子的气
+                    }
+                    if (r === fallPosition[i][j]) {
+                        air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j + 1]);
+                        air[i][j + 1] = air[i][j]; // 更新相连的棋子的气
+                    }
+                } else if (i === 0 && j === 18) {
+                    let d = fp[i + 1][j];
+                    let l = fp[i][j - 1];
+                    if (d === fallPosition[i][j]) {
+                        air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i + 1][j]);
+                        air[i + 1][j] = air[i][j]; // 更新相连的棋子的气
+                    }
+                    if (l === fallPosition[i][j]) {
+                        air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j - 1]);
+                        air[i][j - 1] = air[i][j]; // 更新相连的棋子的气
+                    }
+                } else if (i === 18 && j === 0) {
+                    let u = fp[i - 1][j];
+                    let r = fp[i][j + 1];
+                    if (u === fallPosition[i][j]) {
+                        air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i - 1][j]);
+                        air[i - 1][j] = air[i][j]; // 更新相连的棋子的气
+                    }
+                    if (r === fallPosition[i][j]) {
+                        air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j + 1]);
+                        air[i][j + 1] = air[i][j]; // 更新相连的棋子的气
+                    }
+                } else if (i === 18 && j === 18) {
+                    let u = fp[i - 1][j];
+                    let l = fp[i][j - 1];
+                    if (u === fallPosition[i][j]) {
+                        air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i - 1][j]);
+                        air[i - 1][j] = air[i][j]; // 更新相连的棋子的气
+                    }
+                    if (l === fallPosition[i][j]) {
+                        air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j - 1]);
+                        air[i][j - 1] = air[i][j]; // 更新相连的棋子的气
+                    }
+                } else {
+                    // 连接边
+                    if (i === 0) {
+                        let d = fp[i + 1][j];
+                        let l = fp[i][j - 1];
+                        let r = fp[i][j + 1];
+                        if (d === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i + 1][j]);
+                            air[i + 1][j] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (l === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j - 1]);
+                            air[i][j - 1] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (r === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j + 1]);
+                            air[i][j + 1] = air[i][j]; // 更新相连的棋子的气
+                        }
+                    } else if (j === 0) {
+                        // 连接左边的情况
+                        let u = fp[i - 1][j];
+                        let d = fp[i + 1][j];
+                        let r = fp[i][j + 1];
+                        if (u === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i - 1][j]);
+                            air[i - 1][j] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (d === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i + 1][j]);
+                            air[i + 1][j] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (r === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j + 1]);
+                            air[i][j + 1] = air[i][j]; // 更新相连的棋子的气
+                        }
+                    } else if (i === 18) {
+                        let u = fp[i - 1][j];
+                        let l = fp[i][j - 1];
+                        let r = fp[i][j + 1];
+                        if (u === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i - 1][j]);
+                            air[i - 1][j] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (l === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j - 1]);
+                            air[i][j - 1] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (r === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j + 1]);
+                            air[i][j + 1] = air[i][j]; // 更新相连的棋子的气
+                        }
+                    } else if (j === 18) {
+                        // 连接右边的情况
+                        let u = fp[i - 1][j];
+                        let d = fp[i + 1][j];
+                        let l = fp[i][j - 1];
+                        if (u === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i - 1][j]);
+                            air[i - 1][j] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (d === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i + 1][j]);
+                            air[i + 1][j] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (l === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j - 1]);
+                            air[i][j - 1] = air[i][j]; // 更新相连的棋子的气
+                        }
+                    } else {
+                        // 连接中腹
+                        let u = fp[i - 1][j];
+                        let d = fp[i + 1][j];
+                        let l = fp[i][j - 1];
+                        let r = fp[i][j + 1];
+                        if (u === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i - 1][j]);
+                            air[i - 1][j] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (d === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i + 1][j]);
+                            air[i + 1][j] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (l === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j - 1]);
+                            air[i][j - 1] = air[i][j]; // 更新相连的棋子的气
+                        }
+                        if (r === fallPosition[i][j]) {
+                            air[i][j] = mergeAndRemoveDuplicates(currentChessAir, air[i][j + 1]);
+                            air[i][j + 1] = air[i][j]; // 更新相连的棋子的气
+                        }
+                    }
+                }
+            }
+        }
+    }
+    console.log(air);
+}
+
+
+let checkAir = function(){
+    let fp = fallPosition;
+    for (let i = 0; i < 19; i++) {
+        air[i] = [];
+        for (let j = 0; j < 19; j++) {
+            air[i][j] = [];
+            if (fallPosition[i][j] !== EMPTY) { // 如果有棋子，才判断气
+
+                // 先判断角
+                if (i === 0 && j === 0) {
+                    let d = fp[i + 1][j];
+                    let r = fp[i][j + 1];
+                    if (d === EMPTY) {
+                        air[i][j].push('(' + (i + 1) + ',' + j + ')');
+                    }
+                    if (r === EMPTY) {
+                        air[i][j].push('(' + i + ',' + (j + 1) + ')');
+                    }
+                } else if (i === 0 && j === 18) {
+                    let d = fp[i + 1][j];
+                    let l = fp[i][j - 1];
+                    if (d === EMPTY) {
+                        air[i][j].push('(' + (i + 1) + ',' + j + ')');
+                    }
+                    if (l === EMPTY) {
+                        air[i][j].push('(' + i + ',' + (j - 1) + ')');
+                    }
+                } else if (i === 18 && j === 0) {
+                    let u = fp[i - 1][j];
+                    let r = fp[i][j + 1];
+                    if (u === EMPTY) {
+                        air[i][j].push('(' + (i - 1) + ',' + j + ')');
+                    }
+                    if (r === EMPTY) {
+                        air[i][j].push('(' + i + ',' + (j + 1) + ')');
+                    }
+                } else if (i === 18 && j === 18) {
+                    let u = fp[i - 1][j];
+                    let l = fp[i][j - 1];
+                    if (u === EMPTY) {
+                        air[i][j].push('(' + (i - 1) + ',' + j + ')');
+                    }
+                    if (l === EMPTY) {
+                        air[i][j].push('(' + i + ',' + (j - 1) + ')');
+                    }
+                } else {
+                    // 再判断边
+                    if (i === 0) {
+                        let d = fp[i + 1][j];
+                        let l = fp[i][j - 1];
+                        let r = fp[i][j + 1];
+                        if (d === EMPTY) {
+                            air[i][j].push('(' + (i + 1) + ',' + j + ')');
+                        }
+                        if (l === EMPTY) {
+                            air[i][j].push('(' + i + ',' + (j - 1) + ')');
+                        }
+                        if (r === EMPTY) {
+                            air[i][j].push('(' + i + ',' + (j + 1) + ')');
+                        }
+                    } else if (j === 0) {
+                        let u = fp[i - 1][j];
+                        let d = fp[i + 1][j];
+                        let r = fp[i][j + 1];
+                        if (u === EMPTY) {
+                            air[i][j].push('(' + (i - 1) + ',' + j + ')');
+                        }
+                        if (d === EMPTY) {
+                            air[i][j].push('(' + (i + 1) + ',' + j + ')');
+                        }
+                        if (r === EMPTY) {
+                            air[i][j].push('(' + i + ',' + (j + 1) + ')');
+                        }
+                    } else if (i === 18) {
+                        let u = fp[i - 1][j];
+                        let l = fp[i][j - 1];
+                        let r = fp[i][j + 1];
+                        if (u === EMPTY) {
+                            air[i][j].push('(' + (i - 1) + ',' + j + ')');
+                        }
+                        if (l === EMPTY) {
+                            air[i][j].push('(' + i + ',' + (j - 1) + ')');
+                        }
+                        if (r === EMPTY) {
+                            air[i][j].push('(' + i + ',' + (j + 1) + ')');
+                        }
+                    } else if (j === 18) {
+                        let u = fp[i - 1][j];
+                        let d = fp[i + 1][j];
+                        let l = fp[i][j - 1];
+                        if (u === EMPTY) {
+                            air[i][j].push('(' + (i - 1) + ',' + j + ')');
+                        }
+                        if (d === EMPTY) {
+                            air[i][j].push('(' + (i + 1) + ',' + j + ')');
+                        }
+                        if (l === EMPTY) {
+                            air[i][j].push('(' + i + ',' + (j - 1) + ')');
+                        }
+                    } else {
+                        // 再判断中腹
+                        let u = fp[i - 1][j];
+                        let d = fp[i + 1][j];
+                        let l = fp[i][j - 1];
+                        let r = fp[i][j + 1];
+                        if (u === EMPTY) {
+                            air[i][j].push('(' + (i - 1) + ',' + j + ')');
+                        }
+                        if (d === EMPTY) {
+                            air[i][j].push('(' + (i + 1) + ',' + j + ')');
+                        }
+                        if (l === EMPTY) {
+                            air[i][j].push('(' + i + ',' + (j - 1) + ')');
+                        }
+                        if (r === EMPTY) {
+                            air[i][j].push('(' + i + ',' + (j + 1) + ')');
+                        }
+                    }
+                }
+            }
+        }
+    }
+    console.log(air);
+}
+
+//判死子
+let checkDeath= function(){
+    for (let i=0;i<19;i++){
+        for (let j=0;j<19;j++){
+            if(fallPosition[i][j]!=EMPTY&&air[i][j].length==0){
+                clearChess(i,j);
+                fallPosition[i][j]=EMPTY;
+                air[i][j]=[];//本来就是没气才死，这里没必要
+            }
+        }
+    }
+}
 
 
 
@@ -147,6 +504,52 @@ let clearChess = function (i,j){
     context.clearRect(positions[i][j].x - radius, positions[i][j].y - radius, radius * 2, radius * 2);
     context.putImageData(data[i][j],positions[i][j].x - radius,positions[i][j].y - radius);
 }
+
+//检测死子
+/*let checkDeath = function (color){
+    let opColor;
+    if (color==BLACK){
+        opColor=WHITE;
+    }else {
+        opColor=BLACK;
+    }
+    for (let i = 0; i < 19; i++) {
+
+        for (let j = 0; j < 19; j++) {
+            let up,down,left,right;
+            if(j!=0){
+
+                up=fallPosition[i][j-1];
+            }
+            down=fallPosition[i][j+1];
+            if(i!=0){
+
+                left=fallPosition[i-1][j];
+            }
+            right=fallPosition[i+1][j];
+            if(i==0||j==0||i==18||j==18){
+
+                if (i==0&&j==0){
+                    if (fallPosition[i][j] == color &&down==opColor&&right==opColor){
+                        clearChess(i, j);
+                        fallPosition[i][j] = EMPTY;
+                    }
+                }else if(i==18&&j==0){
+
+                }
+
+            }else {
+                if (fallPosition[i][j] == color && left == opColor
+                    && right == opColor && up == opColor && down == opColor) {
+                    clearChess(i, j);
+                    fallPosition[i][j] = EMPTY;
+                }
+            }
+        }
+    }
+}*/
+
+
 let positions=getPositions();
 let range = getRange();
 //移动鼠标事件监听
@@ -193,13 +596,21 @@ board.onclick=function(event){
                     if (fallPosition[i][j] == EMPTY) {
                         drawChess(positions[i][j].x, positions[i][j].y, BLACK);
                         fallPosition[i][j]=BLACK;
+                        /*checkDeath(BLACK);*/
+                        checkAir();
+                        connectChess();
+                        checkDeath();
                         blackPlayer = !blackPlayer;
 
                     }
                 }else {
-                    if (fallPosition[i][j] == EMPTY){
+                    if (fallPosition[i][j]== EMPTY){
                         drawChess(positions[i][j].x, positions[i][j].y, WHITE);
                         fallPosition[i][j]=WHITE;
+                        /*checkDeath(WHITE);*/
+                        checkAir();
+                        connectChess();
+                        checkDeath();
                         blackPlayer = !blackPlayer;
 
                     }
